@@ -1,0 +1,14 @@
+fastapi>=0.110.0
+uvicorn>=0.28.0
+sqlalchemy>=2.0.0
+cryptography>=42.0.0
+kiteconnect>=4.2.0
+apscheduler>=3.10.0
+requests>=2.31.0
+pandas>=2.2.0
+jugaad-data>=0.3.0
+pydantic-settings>=2.2.0
+bcrypt>=4.1.0
+pyjwt>=2.8.0
+python-multipart>=0.0.9
+yfinance>=0.2.38

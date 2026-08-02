@@ -1,0 +1,23 @@
+# Caddy configuration for serving live-analyzer
+:3000 {
+    # Set web root
+    root * /Users/bala/Documents/Production/live-analyzer/frontend/dist
+
+    # Route API calls explicitly to the backend
+    handle /api/* {
+        reverse_proxy 127.0.0.1:8000
+    }
+
+    # Route all other traffic to the static React frontend
+    handle {
+        try_files {path} /index.html
+        file_server
+    }
+}
+
+# Caddy configuration for serving static-analyzer locally
+:3001 {
+    root * /Users/bala/Documents/Production/static-analyzer/dist
+    try_files {path} /index.html
+    file_server
+}

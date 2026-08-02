@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Investment Portfolio Dashboard — Achievements & Roadmap</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #070913;
+      --bg-secondary: #0c0e1e;
+      --bg-card: rgba(16, 20, 38, 0.6);
+      --bg-card-hover: rgba(22, 28, 54, 0.85);
+      --border-color: rgba(255, 255, 255, 0.06);
+      --primary: #6366f1;
+      --secondary: #a855f7;
+      --emerald: #10b981;
+      --rose: #f43f5e;
+      --amber: #f59e0b;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-primary);
+      background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, var(--bg-primary) 75%);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+      padding: 3rem 1.5rem;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.6rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    /* Glass card utility */
+    .glass {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+      transition: var(--transition-smooth);
+    }
+
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .metric-card {
+      text-align: center;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+    }
+
+    .metric-card.phases::before { background: var(--primary); }
+    .metric-card.security::before { background: var(--emerald); }
+    .metric-card.status::before { background: var(--amber); }
+
+    .metric-value {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.25rem;
+    }
+
+    .metric-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Timeline Section */
+    .section-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+
+    /* Timeline checklist */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      position: relative;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: 15px;
+      width: 2px;
+      height: calc(100% - 20px);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 1.5rem;
+      position: relative;
+    }
+
+    .timeline-marker {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.1);
+      border: 2px solid var(--emerald);
+      color: var(--emerald);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      z-index: 2;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+    }
+
+    .timeline-content {
+      flex-grow: 1;
+    }
+
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #fff;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--emerald);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .timeline-content ul {
+      list-style-type: none;
+      padding-left: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .timeline-content li {
+      position: relative;
+      padding-left: 1.25rem;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .timeline-content li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--emerald);
+      font-weight: bold;
+    }
+
+    /* Core details Grid */
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .detail-card h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #fff;
+    }
+
+    .code-tree {
+      background: rgba(15, 23, 42, 0.4);
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      font-family: monospace;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      overflow-x: auto;
+    }
+
+    /* Roadmap grid */
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .roadmap-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .roadmap-badge {
+      align-self: flex-start;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    .badge-high { background: rgba(99, 102, 241, 0.15); color: var(--primary); }
+    .badge-medium { background: rgba(245, 158, 11, 0.15); color: var(--amber); }
+    .badge-low { background: rgba(148, 163, 184, 0.15); color: var(--text-secondary); }
+
+    .roadmap-title {
+      font-weight: 600;
+      color: #fff;
+      font-size: 1.1rem;
+    }
+
+    .roadmap-desc {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* Interactive animations */
+    .timeline-item:hover .timeline-marker {
+      transform: scale(1.1);
+      background: var(--emerald);
+      color: #fff;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 1rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Header -->
+    <header>
+      <h1>Portfolio Dashboard Project Accomplishments</h1>
+      <p>A comprehensive review of secure implementation phases & roadmap features</p>
+    </header>
+
+    <!-- Metrics Card -->
+    <div class="metrics-grid">
+      <div class="glass metric-card phases">
+        <div class="metric-value">12 / 12</div>
+        <div class="metric-label">Phases Completed</div>
+      </div>
+      <div class="glass metric-card security">
+        <div class="metric-value">SECURED</div>
+        <div class="metric-label">Kite Encryption & Password Gate</div>
+      </div>
+      <div class="glass metric-card status">
+        <div class="metric-value">ACTIVE</div>
+        <div class="metric-label">Local Servers Deployed</div>
+      </div>
+    </div>
+
+    <!-- Timeline Phases Checklist -->
+    <section class="glass">
+      <h2 class="section-title">Implementation Phases Log</h2>
+      <div class="timeline">
+        
+        <!-- Phase 0 -->
+        <div class="timeline-item">
+          <div class="timeline-marker">0</div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <span class="timeline-title">Phase 0: Environment Setup</span>
+              <span class="status-badge">COMPLETED</span>
+            </div>
+            <ul>
+              <li>Configured monorepo directories (`backend/` and `frontend/`).</li>
+              <li>Generated `.env.example` configurations template and established safe `.gitignore` rules.</li>
+              <li>Provisioned python virtual environment (`venv`) and npm packages node-modules.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Phase 1 -->
+        <div class="timeline-item">
+          <div class="timeline-marker">1</div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <span class="timeline-title">Phase 1: Zerodha Kite Integration (Read-Only)</span>
+              <span class="status-badge">COMPLETED</span>
+            </div>
+            <ul>
+              <li>Established Kite OAuth flow redirection endpoints (`/api/auth/callback`).</li>
+              <li>Implemented symmetric Fernet key encryption to protect session tokens at rest.</li>
+              <li>Restricted backend integration entirely to read-only endpoints (holdings & portfolios).</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Phase 2 -->
+        <div class="timeline-item">
+          <div class="timeline-marker">2</div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <span class="timeline-title">Phase 2: Price & NAV Enrichment</span>
+              <span class="status-badge">COMPLETED</span>
+            </div>
+            <ul>
+              <li>Integrated NSELive stock quotes parsing from `jugaad-data` with in-memory caching and `yfinance` fallback.</li>
+              <li>Built AMFI parser mapping numerical Scheme Codes and ISINs to Mutual Fund NAV valuations.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Phase 3 -->
+        <div class="timeline-item">
+          <div class="timeline-marker">3</div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <span class="timeline-title">Phase 3: Manual Assets (FD & Gold)</span>
+              <span class="status-badge">COMPLETED</span>
+            </div>
+            <ul>
+              <li>Engineered Fixed Deposits compounding interest calculations (Monthly, Quarterly, Cumulative).</li>
+              <li>Programmed Gold valuation mapping weights to spot prices in INR using global Futures and currency exchange.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Phase 4 -->
+        <div class="timeline-item">
+          <div class="timeline-marker">4</div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <span class="timeline-title">Phase 4: Portfolio Computation Engine</span>
+              <span class="status-badge">COMPLETED</span>
+            </div>
+            <ul>
+              <li>Coded Newton-Raphson mathematical solver with Bisection method fallback to compute holding and overall XIRR.</li>
+              <li>Calculated real-time asset allocations and total unrealized gains.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Phase 5 -->
+        <div class="timeline-item">
+          <div class="timeline-marker">5</div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <span class="timeline-title">Phase 5: Daily Snapshot scheduler</span>
+              <span class="status-badge">COMPLETED</span>
+            </div>
+            <ul>
+              <li>Wired APScheduler running daily snapshots at 11:30 PM to compile Net Worth trends.</li>
+              <li>Added carry-forward logic to preserve previous holdings (updating prices) when Kite is disconnected.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Phases 6 & 7 -->
+        <div class="timeline-item">
+          <div class="timeline-marker">6</div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <span class="timeline-title">Phases 6 & 7: REST API & Frontend Dashboard</span>
+              <span class="status-badge">COMPLETED</span>
+            </div>
+            <ul>
+              <li>Exposed backend routers for modular operations and mapped React API requests via Vite proxies.</li>
+              <li>Designed a dark-theme glassmorphic single-page interface with Recharts and custom CRUD modals.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Phases 8 - 11 -->
+        <div class="timeline-item">
+          <div class="timeline-marker">8</div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <span class="timeline-title">Phases 8 - 11: Security Gate, Launch Scaffolds & Validations</span>
+              <span class="status-badge">COMPLETED</span>
+            </div>
+            <ul>
+              <li>Configured bcrypt hashing and PyJWT tokens to guard access behind a secure login gate.</li>
+              <li>Wrote the `start.sh` automation script and created the private README setup guide.</li>
+              <li>Validated Python ASGI imports and Vite JSX assets production compilation.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Structural and Core Engine Details -->
+    <div class="details-grid">
+      
+      <!-- Monorepo layout -->
+      <div class="glass detail-card">
+        <h3>Repository Structural Map</h3>
+        <div class="code-tree">
+          portfolio_analyzer/<br>
+          ├── start.sh (servers launcher)<br>
+          ├── README.md (setup guide)<br>
+          ├── backend/<br>
+          │   ├── run.py (Uvicorn entry)<br>
+          │   └── app/<br>
+          │       ├── main.py (routes mount)<br>
+          │       ├── models.py (SQLAlchemy schema)<br>
+          │       ├── scheduler.py (snapshot daemon)<br>
+          │       └── services/<br>
+          │           ├── nse.py & amfi.py (feed updates)<br>
+          │           └── xirr.py (returns solver)<br>
+          └── frontend/<br>
+              ├── vite.config.js (proxy routing)<br>
+              └── src/<br>
+                  ├── App.jsx (React dashboard)<br>
+                  └── App.css (obsidian styles)
+        </div>
+      </div>
+
+      <!-- Tech stack list -->
+      <div class="glass detail-card" style="display: flex; flex-direction: column; gap: 0.8rem;">
+        <h3>Core Technologies Utilized</h3>
+        <div style="display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.95rem; color: var(--text-secondary);">
+          <div><strong style="color: #fff;">Backend:</strong> Python 3.11, FastAPI, Uvicorn, SQLAlchemy, SQLite</div>
+          <div><strong style="color: #fff;">Integrations:</strong> official kiteconnect SDK wrapper</div>
+          <div><strong style="color: #fff;">Financial Calculations:</strong> numpy-free Newton-Raphson & Bisection XIRR calculations</div>
+          <div><strong style="color: #fff;">Scheduler:</strong> APScheduler BackgroundScheduler (daily cron triggers)</div>
+          <div><strong style="color: #fff;">Frontend:</strong> React 19, Vite, Recharts, Lucide Icons</div>
+          <div><strong style="color: #fff;">Security:</strong> Cryptography (Fernet symmetric encryption), PyJWT, Bcrypt</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Future Roadmap -->
+    <section class="glass">
+      <h2 class="section-title">Future Feature Roadmap</h2>
+      <div class="roadmap-grid">
+        
+        <!-- F1 -->
+        <div class="glass roadmap-card">
+          <span class="roadmap-badge badge-high">Priority: HIGH</span>
+          <div class="roadmap-title">AI Holding Analyzer</div>
+          <div class="roadmap-desc">Integrate LLM connections to query financial articles, company reports, and supply textual reviews of stock positions.</div>
+        </div>
+
+        <!-- F2 -->
+        <div class="glass roadmap-card">
+          <span class="roadmap-badge badge-medium">Priority: MEDIUM</span>
+          <div class="roadmap-title">Automated PDF Reports</div>
+          <div class="roadmap-desc">Generate monthly summaries of portfolio value gains and asset allocation growth, sent automatically to the owner's email.</div>
+        </div>
+
+        <!-- F3 -->
+        <div class="glass roadmap-card">
+          <span class="roadmap-badge badge-low">Priority: LOW</span>
+          <div class="roadmap-title">Indian Capital Gains Tax Tool</div>
+          <div class="roadmap-desc">Calculate LTCG and STCG tax allocations based on manually entered transaction histories or uploaded spreadsheets.</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      Personal Investment Portfolio Dashboard Tracker — Private Deployment Document &copy; 2026
+    </footer>
+
+  </div>
+
+</body>
+</html>
